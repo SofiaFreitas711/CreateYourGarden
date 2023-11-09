@@ -44,6 +44,11 @@ function draw(){
   noStroke()
   circle(lakeX, lakeY, lakeD)
 
+  //isto seria para desenhar todas as flores
+  for(let i = 0; i<flowers.length; i++){
+    drawFlower(flowers[i].x, flowers[i].y, flowers[i].color, flowers[i].nPetals, flowers[i].size)
+  } 
+
   if(flowerCount >= 10){
     addFish()
   }
@@ -55,29 +60,26 @@ function mousePressed(){
   let d = dist(lakeX,lakeY,mouseX,mouseY)
 
   if(d>(lakeD/2)){
+    let flowerColor = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF"]
+    flowerColor = random(flowerColor)
+    let size = random(20,60)
+    let nPetals = Math.floor(random(9,14))
+
+    flowers.push({x:mouseX, y:mouseY, color: flowerColor, nPetals: nPetals, size: size})
     //opções de cor
-    drawFlower(mouseX,mouseY)
+    drawFlower(mouseX,mouseY,flowerColor)
     flowerCount += 1
   }  
+  console.log(flowers)
   console.log(flowerCount)
 }
 
-function drawFlower(x,y){
+function drawFlower(x,y, flowerColor,nPetals,size) {
   
   push()
   translate(x,y)
   noStroke()
 
-  // opções de cor
-  let colors = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF"]
-  
-  //desenho da flor
-  let flowerColor = random(colors)
-  // console.log(flowerColor)
-
-  let nPetals = Math.floor(random(9,14))
-  // console.log(nPetals);
-  let size = random(20,60)
   for(i=0;i<nPetals;i++){
     fill(flowerColor)
     ellipse(0,15, size/3, size)
