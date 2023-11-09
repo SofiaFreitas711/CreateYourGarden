@@ -2,8 +2,8 @@ let lakeX = 0
 let lakeY = 0
 let lakeD = 0
 let flowerCount = 0
-let grassColor = "#B0B591"
-let lake = "#627C77"
+let grassColor
+let lake
 let flowers = []
 
 function setup() {
@@ -14,8 +14,11 @@ function setup() {
   lakeX = w/2
   lakeY = h/2
   lakeD = h/3 
+  
+}
 
-  //variação do relvado
+function draw(){
+
   if(flowerCount >= 0 && flowerCount < 5) {
     grassColor = "#B0B591"
   }else if(flowerCount >= 5 && flowerCount < 10){
@@ -27,7 +30,7 @@ function setup() {
   }
   background(grassColor);
 
-  //desenho do lago e variação
+
   if(flowerCount >= 0 && flowerCount < 5) {
     lake = "#627C77"
   }else if(flowerCount >= 5 && flowerCount < 10){
@@ -41,46 +44,11 @@ function setup() {
   noStroke()
   circle(lakeX, lakeY, lakeD)
 
-  //desenhar peixe
   if(flowerCount >= 10){
     addFish()
   }
-  // let x=window.innerWidth/2
-  // let y=window.innerHeight/2
 
-  // fill("orange")
-  // ellipse(x,y, 16,10)
-  // triangle(x+6,y,x+12,y+6,x+12,y-6)
 }
-
-// function draw(){
-
-//   if(flowerCount >= 0 && flowerCount < 5) {
-//     grassColor = "#B0B591"
-//   }else if(flowerCount >= 5 && flowerCount < 10){
-//     grassColor = "#B4BD79"
-//   }else if(flowerCount >= 10 && flowerCount < 15){
-//     grassColor = "#C2D262"
-//   }else{
-//     grassColor = "#D8E878"
-//   }
-//   background(grassColor);
-
-
-//   if(flowerCount >= 0 && flowerCount < 5) {
-//     lake = "#627C77"
-//   }else if(flowerCount >= 5 && flowerCount < 10){
-//     lake = "#72A89E"
-//   }else if(flowerCount >= 10 && flowerCount < 15){
-//     lake = "#C0EEE5"
-//   }else{
-//     lake = "#D5F9F3"
-//   }
-//   fill(lake)
-//   noStroke()
-//   circle(lakeX, lakeY, lakeD)
-
-// }
 
 function mousePressed(){
 
