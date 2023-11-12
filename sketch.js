@@ -5,6 +5,13 @@ let flowerCount = 0
 let grassColor
 let lake
 let flowers = []
+let angle = 0
+let radius1 = 85;
+let radius2 = 50;
+let speed = 0.01;
+// the center of our rotation:
+let centerX = 0;
+let centerY = 0;
 
 function setup() {
   const w = window.innerWidth
@@ -14,6 +21,9 @@ function setup() {
   lakeX = w/2
   lakeY = h/2
   lakeD = h/3 
+
+  centerX = w/2
+  centerY = h/2
   
 }
 
@@ -44,7 +54,6 @@ function draw(){
   noStroke()
   circle(lakeX, lakeY, lakeD)
 
-  //isto seria para desenhar todas as flores
   for(let i = 0; i<flowers.length; i++){
     drawFlower(flowers[i].x, flowers[i].y, flowers[i].color, flowers[i].nPetals, flowers[i].size)
   } 
@@ -52,6 +61,7 @@ function draw(){
   if(flowerCount >= 10){
     addFish()
   }
+ 
 
 }
 
@@ -91,12 +101,28 @@ function drawFlower(x,y, flowerColor,nPetals,size) {
   
 }
 
-function addFish(){
-  let x=window.innerWidth/2
-  let y=window.innerHeight/2
-
+function addFish(){  
+  push()
+  translate(centerX, centerY);
+  rotate (-angle);
+  
   fill("orange")
-  ellipse(x,y, 16,10)
-  triangle(x+6,y,x+12,y+6,x+12,y-6)
+  ellipse(radius1,0, 10,16)
+  triangle(radius1,8,radius1-8,15,radius1+8,15)
+  
+  angle = angle + speed;
+  pop()
+
+  push()
+  translate(centerX, centerY);
+  rotate (angle);
+  
+  fill("orange")
+  ellipse(radius2,0, 10,16)
+  triangle(radius2,-8,radius2-8,-15,radius2+8,-15)
+  
+  angle = angle + speed*1.5;
+  pop()
+
 }
 
