@@ -40,6 +40,20 @@ function draw(){
   }
   background(grassColor);
 
+  for(let j=60; j<height;j+=120){
+    for(let i=50; i<width; i+= 180){
+      if(j%240==60){
+        i+= 100
+      }
+      stroke("#7C815C")
+      line(i,j,i+5,j-6)
+      line(i+5,j-6,i+10,j-4)
+      line(i+10,j-4, i+20,j-6)
+      line(i+20,j-6,i+25,j)
+        
+    }
+  }
+
 
   if(flowerCount >= 0 && flowerCount < 5) {
     lake = "#627C77"
