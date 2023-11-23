@@ -13,6 +13,18 @@ let speed = 0.01;
 let centerX = 0;
 let centerY = 0;
 
+let grassX=[]
+let grassY=[]
+let position1=[]
+let position2=[]
+let position3=[]
+let position4=[]
+let position5=[]
+let position6=[]
+let position7=[]
+
+let angles = []
+
 function setup() {
   const w = window.innerWidth
   const h = window.innerHeight
@@ -24,6 +36,21 @@ function setup() {
 
   centerX = w/2
   centerY = h/2
+
+  for(let i=0; i<50; i++){
+    grassX[i]=random(0,w)
+    grassY[i]=random(0,h)
+    position1[i]=random(5,10)
+    position2[i]=random(8,14)
+    position3[i]=random(10,15)
+    position4[i]=random(6,8)
+    position5[i]=random(15,20)
+    position6[i]=random(8,14)
+    position7[i]=random(20,25)
+    angles[i]=random(-1,1)
+  }
+
+  console.log(w/400);
   
 }
 
@@ -40,19 +67,41 @@ function draw(){
   }
   background(grassColor);
 
-  for(let j=60; j<height;j+=120){
-    for(let i=50; i<width; i+= 180){
-      if(j%240==60){
-        i+= 100
-      }
-      stroke("#7C815C")
-      line(i,j,i+5,j-6)
-      line(i+5,j-6,i+10,j-4)
-      line(i+10,j-4, i+20,j-6)
-      line(i+20,j-6,i+25,j)
+  // for(let j=60; j<height;j+=120){
+  //   for(let i=50; i<width; i+= 180){
+  //     if(j%240==60){
+  //       i+= 100
+  //     }
+  //     stroke("#7C815C")
+  //     line(i,j,i+5,j-6)
+  //     line(i+5,j-6,i+10,j-4)
+  //     line(i+10,j-4, i+20,j-6)
+  //     line(i+20,j-6,i+25,j)
         
+  //   }
+  // }
+  for(let j=0; j<grassX.length;j++){
+    // for(let i=50; i<width; i+= 180){
+    //   if(j%240==60){
+    //     i+= 100
+    //   }
+    stroke("#7C815C")
+    noFill()
+     // line(grassX[j],grassY[j],grassX[j]+5,grassY[j]-6)
+     // line(grassX[j]+5,grassY[j]-6,grassX[j]+10,grassY[j]-4)
+     // line(grassX[j]+10,grassY[j]-4, grassX[j]+20,grassY[j]-6)
+     // line(grassX[j]+20,grassY[j]-6,grassX[j]+25,grassY[j])
+    
+    beginShape();
+	  vertex(grassX[j],grassY[j]);
+	  vertex(grassX[j]+position1[j],grassY[j]-position2[j]);
+	  vertex(grassX[j]+position3[j],grassY[j]-position4[j]);
+	  vertex(grassX[j]+position5[j],grassY[j]-position6[j]);
+    vertex(grassX[j]+position7[j],grassY[j]);
+	  endShape();
+    
+    
     }
-  }
 
 
   if(flowerCount >= 0 && flowerCount < 5) {
