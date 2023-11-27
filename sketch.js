@@ -69,10 +69,9 @@ function setup() {
     // angles[i]=random(-1,1)
   }
   // sound.play()
-  // translate()
-  // rotate(HALF_PI)
-  translate(0,0);
-  rotate(PI/6);
+  
+  imageMode(CENTER);
+  angleMode(DEGREES);
   bird.resize(200,155)  
 }
 
@@ -144,10 +143,11 @@ function draw(){
     addFish()
   }
 
+  rotate(45);
   image(bird, birdX, birdY)
   if(birdX<window.innerWidth){
-    birdX+=4
-    birdY-=4
+    birdX+=2
+    birdY-=3
   } 
 }
 
