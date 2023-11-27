@@ -27,6 +27,15 @@ let grassY=[]
 let positions = {position1:[], position2:[], position3:[], position4:[], position5:[], position6:[], position7:[]}
 
 // let angles = []
+// let sound
+let bird
+let birdX=-25
+let birdY=window.innerHeight 
+
+function preload(){
+  // sound =  loadSound("assets/birds.wav")
+  bird = loadImage("assets/Bird.png")
+}
 
 function setup() {
   const w = window.innerWidth
@@ -59,9 +68,12 @@ function setup() {
     positions.position7[i]=random(20,25)
     // angles[i]=random(-1,1)
   }
-
-  console.log(w/400);
-  
+  // sound.play()
+  // translate()
+  // rotate(HALF_PI)
+  translate(0,0);
+  rotate(PI/6);
+  bird.resize(200,155)  
 }
 
 function draw(){
@@ -108,12 +120,9 @@ function draw(){
 	  vertex(grassX[j]+positions.position3[j],grassY[j]-positions.position4[j]);
 	  vertex(grassX[j]+positions.position5[j],grassY[j]-positions.position6[j]);
     vertex(grassX[j]+positions.position7[j],grassY[j]);
-	  endShape();
-    
-    
-    }
-
-
+	  endShape(); 
+  }
+  
   if(flowerCount >= 0 && flowerCount < 5) {
     lake = "#627C77"
   }else if(flowerCount >= 5 && flowerCount < 10){
@@ -134,7 +143,12 @@ function draw(){
   if(flowerCount >= 10){
     addFish()
   }
- 
+
+  image(bird, birdX, birdY)
+  if(birdX<window.innerWidth){
+    birdX+=4
+    birdY-=4
+  } 
 }
 
 function mousePressed(){
