@@ -6,31 +6,21 @@ let grassColor
 let lake
 let flowers = []
 let angle = 0
-// let radius1 = 85;
-// let radius2 = 50;
 let radius = [85,50]
 let radiusWaves = [lakeX, lakeY]
-let speed = 0.01;
+let speed = 0.005;
 // the center of our rotation:
 let centerX = 0;
 let centerY = 0;
-
 let grassX=[]
 let grassY=[]
-// let position1=[]
-// let position2=[]
-// let position3=[]
-// let position4=[]
-// let position5=[]
-// let position6=[]
-// let position7=[]
 let positions = {position1:[], position2:[], position3:[], position4:[], position5:[], position6:[], position7:[]}
 
-// let angles = []
 // let sound
 let bird
-let birdX=-25
+let birdX=0
 let birdY=window.innerHeight 
+let drawBird = false
 
 function preload(){
   // sound =  loadSound("assets/birds.wav")
@@ -44,7 +34,7 @@ function setup() {
 
   lakeX = w/2
   lakeY = h/2
-  lakeD = h/3 
+  lakeD = h/2.5
 
   centerX = w/2
   centerY = h/2
@@ -52,13 +42,6 @@ function setup() {
   for(let i=0; i<50; i++){
     grassX[i]=random(0,w)
     grassY[i]=random(0,h)
-    // position1[i]=random(5,10)
-    // position2[i]=random(8,14)
-    // position3[i]=random(10,15)
-    // position4[i]=random(6,8)
-    // position5[i]=random(15,20)
-    // position6[i]=random(8,14)
-    // position7[i]=random(20,25)
     positions.position1[i]=random(5,10)
     positions.position2[i]=random(8,14)
     positions.position3[i]=random(10,15)
@@ -66,12 +49,10 @@ function setup() {
     positions.position5[i]=random(15,20)
     positions.position6[i]=random(8,14)
     positions.position7[i]=random(20,25)
-    // angles[i]=random(-1,1)
   }
   // sound.play()
   
   imageMode(CENTER);
-  angleMode(DEGREES);
   bird.resize(200,155)  
 }
 
@@ -88,31 +69,10 @@ function draw(){
   }
   background(grassColor);
 
-  // for(let j=60; j<height;j+=120){
-  //   for(let i=50; i<width; i+= 180){
-  //     if(j%240==60){
-  //       i+= 100
-  //     }
-  //     stroke("#7C815C")
-  //     line(i,j,i+5,j-6)
-  //     line(i+5,j-6,i+10,j-4)
-  //     line(i+10,j-4, i+20,j-6)
-  //     line(i+20,j-6,i+25,j)
-        
-  //   }
-  // }
   for(let j=0; j<grassX.length;j++){
-    // for(let i=50; i<width; i+= 180){
-    //   if(j%240==60){
-    //     i+= 100
-    //   }
     stroke("#7C815C")
     noFill()
-     // line(grassX[j],grassY[j],grassX[j]+5,grassY[j]-6)
-     // line(grassX[j]+5,grassY[j]-6,grassX[j]+10,grassY[j]-4)
-     // line(grassX[j]+10,grassY[j]-4, grassX[j]+20,grassY[j]-6)
-     // line(grassX[j]+20,grassY[j]-6,grassX[j]+25,grassY[j])
-    
+
     beginShape();
 	  vertex(grassX[j],grassY[j]);
 	  vertex(grassX[j]+positions.position1[j],grassY[j]-positions.position2[j]);
@@ -143,12 +103,25 @@ function draw(){
     addFish()
   }
 
-  rotate(45);
-  image(bird, birdX, birdY)
-  if(birdX<window.innerWidth){
-    birdX+=2
-    birdY-=3
-  } 
+  rotate(QUARTER_PI);
+  //ativa o desenho do passaro quando o resto do frameCount for 0
+  if(frameCount%240==0){
+    drawBird = true
+  }
+
+  //ativa o desenho
+  if(drawBird == true){
+    image(bird, birdX, birdY)
+    if(birdX<window.innerWidth){
+      birdX+=2
+      birdY-=3
+    }else{
+      birdX = 0
+      birdY = window.innerHeight
+      //quando chega ao fim passa para false até o resto ser 0
+      drawBird=false
+    }
+  }
 }
 
 function mousePressed(){
@@ -223,7 +196,6 @@ function addFish(){
   strokeWeight(2)
   stroke(255,255,255,150)
   noFill()
-  // circle(radius[0]/10,radius[0]/4, 40)
   arc(radiusWaves[0], radiusWaves[0]/4, 50, 50, 0, HALF_PI);
   arc(radiusWaves[1], radiusWaves[1]/3, 150, 150, 0, HALF_PI);
   arc(radiusWaves[0]/8, radiusWaves[0]/3, 180, 180, PI, PI + QUARTER_PI);
