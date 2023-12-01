@@ -58,11 +58,11 @@ function setup() {
 
 function draw(){
 
-  if(flowerCount >= 0 && flowerCount < 5) {
+  if(flowerCount >= 0 && flowerCount < 10) {
     grassColor = "#B0B591"
-  }else if(flowerCount >= 5 && flowerCount < 10){
+  }else if(flowerCount >= 10 && flowerCount < 20){
     grassColor = "#B4BD79"
-  }else if(flowerCount >= 10 && flowerCount < 15){
+  }else if(flowerCount >= 20 && flowerCount < 30){
     grassColor = "#C2D262"
   }else{
     grassColor = "#D8E878"
@@ -82,11 +82,11 @@ function draw(){
 	  endShape(); 
   }
   
-  if(flowerCount >= 0 && flowerCount < 5) {
+  if(flowerCount >= 0 && flowerCount < 10) {
     lake = "#627C77"
-  }else if(flowerCount >= 5 && flowerCount < 10){
+  }else if(flowerCount >= 10 && flowerCount < 20){
     lake = "#72A89E"
-  }else if(flowerCount >= 10 && flowerCount < 15){
+  }else if(flowerCount >= 20 && flowerCount < 30){
     lake = "#C0EEE5"
   }else{
     lake = "#D5F9F3"
@@ -94,33 +94,25 @@ function draw(){
   fill(lake)
   noStroke()
   circle(lakeX, lakeY, lakeD)
+  //Sombra
+  push()
+  drawingContext.shadowOffsetX = 5
+  drawingContext.shadowOffsetY = -5
+  drawingContext.shadowBlur = 20
+  drawingContext.shadowColor = "black"
+  noFill()
+  strokeWeight(0.5)
+  stroke(lake)
+  circle(lakeX-4,lakeY+3,lakeD-7)
+  pop()
 
   for(let i = 0; i<flowers.length; i++){
     drawFlower(flowers[i].x, flowers[i].y, flowers[i].color, flowers[i].nPetals, flowers[i].size)
   } 
 
-  if(flowerCount >= 10){
+  if(flowerCount >= 20){
     addFish()
-  }
-
-  rotate(QUARTER_PI);
-  //ativa o desenho do passaro quando o resto do frameCount for 0
-  if(frameCount%240==0){
-    drawBird = true
-  }
-
-  //ativa o desenho
-  if(drawBird == true){
-    image(bird, birdX, birdY)
-    if(birdX<window.innerWidth){
-      birdX+=2
-      birdY-=3
-    }else{
-      birdX = 0
-      birdY = window.innerHeight
-      //quando chega ao fim passa para false até o resto ser 0
-      drawBird=false
-    }
+    flyingBird()
   }
 }
 
@@ -129,7 +121,7 @@ function mousePressed(){
   let d = dist(lakeX,lakeY,mouseX,mouseY)
 
   if(d>(lakeD/2)){
-    let flowerColor = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF"]
+    let flowerColor = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF","#CD5C5C","#FA8072"]
     flowerColor = random(flowerColor)
     let size = random(20,60)
     let nPetals = Math.floor(random(9,14))
@@ -204,4 +196,27 @@ function addFish(){
   angle = angle + speed;
   pop()
 
+}
+
+function flyingBird(){
+  rotate(QUARTER_PI);
+  //ativa o desenho do passaro quando o resto do frameCount for 0
+  if(frameCount%6000==0){
+    drawBird = true
+  }
+  console.log(frameCount%6000)
+
+  //ativa o desenho
+  if(drawBird == true){
+    image(bird, birdX, birdY)
+    if(birdX<window.innerWidth){
+      birdX+=2
+      birdY-=3
+    }else{
+      birdX = 0
+      birdY = window.innerHeight
+      //quando chega ao fim passa para false até o resto ser 0
+      drawBird=false
+    }
+  }
 }
