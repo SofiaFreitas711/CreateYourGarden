@@ -15,16 +15,17 @@ let centerY = 0;
 let grassX=[]
 let grassY=[]
 let positions = {position1:[], position2:[], position3:[], position4:[], position5:[], position6:[], position7:[]}
-
-// let sound
+let sound
 let bird
 let birdX=0
-let birdY=window.innerHeight 
+let birdY=window.innerHeight + 292
 let drawBird = false
+let soundPlaying = false
 
 function preload(){
   // sound =  loadSound("assets/birds.wav")
-  bird = loadImage("assets/Bird.png")
+  sound =  loadSound("assets/sound.wav")
+  bird = loadImage("assets/Bird2.png")
 }
 
 function setup() {
@@ -50,7 +51,6 @@ function setup() {
     positions.position6[i]=random(8,14)
     positions.position7[i]=random(20,25)
   }
-  // sound.play()
   
   imageMode(CENTER);
   bird.resize(200,155)  
@@ -121,7 +121,7 @@ function mousePressed(){
   let d = dist(lakeX,lakeY,mouseX,mouseY)
 
   if(d>(lakeD/2)){
-    let flowerColor = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF","#CD5C5C","#FA8072"]
+    let flowerColor = ["#8B0000","#B22222","#DC143C","#FFE4E1","#FFFFFF","#c71f37","#ef233c"]
     flowerColor = random(flowerColor)
     let size = random(20,60)
     let nPetals = Math.floor(random(9,14))
@@ -131,7 +131,7 @@ function mousePressed(){
     flowerCount += 1
   }  
   console.log(flowers)
-  console.log(flowerCount)
+  // console.log(flowerCount)
 }
 
 function drawFlower(x,y, flowerColor,nPetals,size) {
@@ -196,15 +196,68 @@ function addFish(){
   angle = angle + speed;
   pop()
 
+  // push()
+  // translate(lakeX,lakeY)
+
+  // pop()
+  if(flowerCount >= 30){ 
+    push()
+    drawingContext.shadowOffsetX = 8;
+    drawingContext.shadowOffsetY = 10;
+    drawingContext.shadowBlur = 20
+    drawingContext.shadowColor = 'grey';
+    circle(lakeX,lakeY,20)
+    pop()
+    let c = drawingContext.createRadialGradient(lakeX,lakeY,17,lakeX,lakeY,50)
+    c.addColorStop(0,"green")
+    c.addColorStop(1,"darkgreen")
+    drawingContext.fillStyle = c
+    noStroke()
+    arc(lakeX, lakeY, 50,50, PI/7, -PI/7)
+    
+    push()
+    translate(lakeX,lakeY)
+    for(let i = 0; i<7;i++){
+      fill("LightPink")
+      ellipse(0,5,8,16)
+      rotate(TWO_PI/7) 
+    }
+    pop()
+
+    push()
+    drawingContext.shadowOffsetX = 8;
+    drawingContext.shadowOffsetY = 10;
+    drawingContext.shadowBlur = 20
+    drawingContext.shadowColor = 'grey';
+    circle(lakeX+50,lakeY+40,20)
+    pop()
+    let c2 = drawingContext.createRadialGradient(lakeX,lakeY,17,lakeX,lakeY,50)
+    c2.addColorStop(0,"green")
+    c2.addColorStop(1,"darkgreen")
+    drawingContext.fillStyle = c2
+    noStroke()
+    arc(lakeX+50, lakeY+40, 50,50, -TWO_PI/3, PI)
+    
+    push()
+    translate(lakeX+50,lakeY+40)
+    for(let i = 0; i<7;i++){
+      fill("LightPink")
+      ellipse(0,5,8,16)
+      rotate(TWO_PI/7) 
+    }
+    pop()
+  }
+
 }
 
 function flyingBird(){
   rotate(QUARTER_PI);
-  //ativa o desenho do passaro quando o resto do frameCount for 0
-  if(frameCount%6000==0){
+  //ativa o desenho do passaro e o som quando o resto do frameCount for 0
+  if(frameCount%600==0){
     drawBird = true
+    sound.play()
   }
-  console.log(frameCount%6000)
+  // console.log(frameCount%600)
 
   //ativa o desenho
   if(drawBird == true){
