@@ -6,14 +6,17 @@ let grassColor
 let lake
 let flowers = []
 let angle = 0
-let radius = [85,50]
+let radius = []
 let radiusWaves = [lakeX, lakeY]
 let speed = 0.005;
+let fishColors = ["#FFC996", "#DE700B", "#E3C475", "#EFB178"]
 // the center of our rotation:
 let centerX = 0;
 let centerY = 0;
 let grassX=[]
 let grassY=[]
+let lilyX=[]
+let lilyY=[] 
 let positions = {position1:[], position2:[], position3:[], position4:[], position5:[], position6:[], position7:[]}
 let sound
 let bird
@@ -23,9 +26,8 @@ let drawBird = false
 let soundPlaying = false
 
 function preload(){
-  // sound =  loadSound("assets/birds.wav")
   sound =  loadSound("assets/sound.wav")
-  bird = loadImage("assets/Bird2.png")
+  bird = loadImage("assets/Bird.png")
 }
 
 function setup() {
@@ -51,6 +53,17 @@ function setup() {
     positions.position6[i]=random(8,14)
     positions.position7[i]=random(20,25)
   }
+
+  for(let i=0; i<4;i++){
+    radius[i]=Math.floor(random(20, lakeD/3.5))
+  }
+
+  for(let i=0;i<2;i++){
+    lilyX[i]=random(lakeX-lakeD/3, lakeX +lakeD/3)
+    lilyY[i]=random(lakeY-lakeD/3, lakeY +lakeD/3)
+  }
+
+  console.log(lakeX+50,lakeX-50, lakeY+50, lakeY-50, lakeD);
   
   imageMode(CENTER);
   bird.resize(200,155)  
@@ -114,6 +127,7 @@ function draw(){
     addFish()
     flyingBird()
   }
+
 }
 
 function mousePressed(){
@@ -130,7 +144,7 @@ function mousePressed(){
     drawFlower(mouseX,mouseY,flowerColor)
     flowerCount += 1
   }  
-  console.log(flowers)
+  // console.log(flowers)
   // console.log(flowerCount)
 }
 
@@ -158,29 +172,68 @@ function drawFlower(x,y, flowerColor,nPetals,size) {
   
 }
 
-function addFish(){  
-  push()
-  translate(centerX, centerY);
-  rotate (-angle);
-  
-  fill("orange")
-  ellipse(radius[0],0, 10,16)
-  triangle(radius[0],8,radius[0]-8,15,radius[0]+8,15)
-  
-  angle = angle + speed;
-  pop()
+function addFish(){ 
+  for(let i=0; i<4;i++){
+    push()
+    translate(centerX,centerY)
+    if(i%2==0){
+      rotate(-angle*0.2*(i+1))
+    }else{
+      rotate(angle*0.2*(i+1))
+    }
 
-  push()
-  translate(centerX, centerY);
-  rotate (angle);
-  
-  fill("orange")
-  ellipse(radius[1],0, 10,16)
-  triangle(radius[1],-8,radius[1]-8,-15,radius[1]+8,-15)
-  
-  angle = angle + speed*1.5;
-  pop()
+    if(i%2==0){
+      //criar sombras
+      push()
+      drawingContext.shadowOffsetX = 5;
+      drawingContext.shadowOffsetY = 2;
+      drawingContext.shadowBlur = 10
+      drawingContext.shadowColor = 'grey';
+      ellipse(radius[i],0, 10,16)
+      pop()
+      push()
+      drawingContext.shadowOffsetX = 5;
+      drawingContext.shadowOffsetY = 2;
+      drawingContext.shadowBlur = 10
+      drawingContext.shadowColor = 'grey';
+      triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
+      pop()
 
+      //criar peixe
+      fill(fishColors[i])
+      ellipse(radius[i],0, 10,16)
+      triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
+    }else{
+      //criar sombras
+      push()
+      drawingContext.shadowOffsetX = 5;
+      drawingContext.shadowOffsetY = 2;
+      drawingContext.shadowBlur = 10
+      drawingContext.shadowColor = 'grey';
+      ellipse(radius[i],0, 10,16)
+      pop()
+      push()
+      drawingContext.shadowOffsetX = 5;
+      drawingContext.shadowOffsetY = 2;
+      drawingContext.shadowBlur = 10
+      drawingContext.shadowColor = 'grey';
+      triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
+      pop()
+
+      //criar peixe
+      fill(fishColors[i])
+      ellipse(radius[i],0, 10,16)
+      triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
+    }
+    
+    if(radius[i]<80){
+      angle = angle + speed*1.5
+    }else{
+      angle = angle + speed
+    }
+    pop()
+  }
+  
   push()
   translate(centerX, centerY);
   rotate (angle);
@@ -196,56 +249,36 @@ function addFish(){
   angle = angle + speed;
   pop()
 
-  // push()
-  // translate(lakeX,lakeY)
-
-  // pop()
-  if(flowerCount >= 30){ 
-    push()
-    drawingContext.shadowOffsetX = 8;
-    drawingContext.shadowOffsetY = 10;
-    drawingContext.shadowBlur = 20
-    drawingContext.shadowColor = 'grey';
-    circle(lakeX,lakeY,20)
-    pop()
-    let c = drawingContext.createRadialGradient(lakeX,lakeY,17,lakeX,lakeY,50)
-    c.addColorStop(0,"green")
-    c.addColorStop(1,"darkgreen")
-    drawingContext.fillStyle = c
-    noStroke()
-    arc(lakeX, lakeY, 50,50, PI/7, -PI/7)
-    
-    push()
-    translate(lakeX,lakeY)
-    for(let i = 0; i<7;i++){
-      fill("LightPink")
-      ellipse(0,5,8,16)
-      rotate(TWO_PI/7) 
+  if(flowerCount >= 30){
+    for(let i=0; i<lilyX.length;i++){
+      push()
+      drawingContext.shadowOffsetX = 8;
+      drawingContext.shadowOffsetY = 10;
+      drawingContext.shadowBlur = 20
+      drawingContext.shadowColor = 'grey';
+      circle(lilyX[i],lilyY[i],20)
+      pop()
+      let c = drawingContext.createRadialGradient(lilyX[i],lilyY[i],17,lilyX[i],lilyY[i],50)
+      c.addColorStop(0,"green")
+      c.addColorStop(1,"darkgreen")
+      drawingContext.fillStyle = c
+      noStroke()
+  
+      if(i%2==0){
+        arc(lilyX[i], lilyY[i], 50,50, PI/7, -PI/7)
+      }else{
+        arc(lilyX[i], lilyY[i], 50,50, -TWO_PI/3, PI)
+      }
+  
+      push()
+      translate(lilyX[i],lilyY[i])
+      for(let i = 0; i<7;i++){
+        fill("LightPink")
+        ellipse(0,5,8,16)
+        rotate(TWO_PI/7) 
+      }
+      pop()
     }
-    pop()
-
-    push()
-    drawingContext.shadowOffsetX = 8;
-    drawingContext.shadowOffsetY = 10;
-    drawingContext.shadowBlur = 20
-    drawingContext.shadowColor = 'grey';
-    circle(lakeX+50,lakeY+40,20)
-    pop()
-    let c2 = drawingContext.createRadialGradient(lakeX,lakeY,17,lakeX,lakeY,50)
-    c2.addColorStop(0,"green")
-    c2.addColorStop(1,"darkgreen")
-    drawingContext.fillStyle = c2
-    noStroke()
-    arc(lakeX+50, lakeY+40, 50,50, -TWO_PI/3, PI)
-    
-    push()
-    translate(lakeX+50,lakeY+40)
-    for(let i = 0; i<7;i++){
-      fill("LightPink")
-      ellipse(0,5,8,16)
-      rotate(TWO_PI/7) 
-    }
-    pop()
   }
 
 }
