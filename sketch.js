@@ -10,9 +10,6 @@ let radius = []
 let radiusWaves = [lakeX, lakeY]
 let speed = 0.005;
 let fishColors = ["#FFC996", "#DE700B", "#E3C475", "#EFB178"]
-// the center of our rotation:
-let centerX = 0;
-let centerY = 0;
 let grassX=[]
 let grassY=[]
 let lilyX=[]
@@ -24,6 +21,10 @@ let birdX=0
 let birdY=window.innerHeight + 292
 let drawBird = false
 let soundPlaying = false
+let isPositionFree = true
+let nFish = 0
+let isDay = true
+let fishSpeed = 0.3
 
 function preload(){
   sound =  loadSound("assets/sound.wav")
@@ -39,9 +40,6 @@ function setup() {
   lakeY = h/2
   lakeD = h/2.5
 
-  centerX = w/2
-  centerY = h/2
-
   for(let i=0; i<50; i++){
     grassX[i]=random(0,w)
     grassY[i]=random(0,h)
@@ -54,16 +52,16 @@ function setup() {
     positions.position7[i]=random(20,25)
   }
 
-  for(let i=0; i<4;i++){
-    radius[i]=Math.floor(random(20, lakeD/3.5))
+  nFish = Math.floor(random(1,5))
+
+  for(let i=0; i<nFish;i++){
+    radius[i]=Math.floor(random(10, lakeD/3.5))
   }
 
   for(let i=0;i<2;i++){
     lilyX[i]=random(lakeX-lakeD/3, lakeX +lakeD/3)
     lilyY[i]=random(lakeY-lakeD/3, lakeY +lakeD/3)
   }
-
-  console.log(lakeX+50,lakeX-50, lakeY+50, lakeY-50, lakeD);
   
   imageMode(CENTER);
   bird.resize(200,155)  
@@ -123,10 +121,9 @@ function draw(){
     drawFlower(flowers[i].x, flowers[i].y, flowers[i].color, flowers[i].nPetals, flowers[i].size)
   } 
 
-  if(flowerCount >= 20){
-    addFish()
-    flyingBird()
-  }
+  waterDetails()
+  flyingBird()
+  dayNight()
 
 }
 
@@ -140,12 +137,36 @@ function mousePressed(){
     let size = random(20,60)
     let nPetals = Math.floor(random(9,14))
 
-    flowers.push({x:mouseX, y:mouseY, color: flowerColor, nPetals: nPetals, size: size})
-    drawFlower(mouseX,mouseY,flowerColor)
-    flowerCount += 1
+    for(let i=0; i<flowers.length; i++){
+      let d2 = dist(flowers[i].x,flowers[i].y,mouseX, mouseY)
+
+      if(d2 < flowers[i].size){
+        isPositionFree=false
+        break
+      }else{
+        isPositionFree=true
+      }
+    }
+      
+    if(isPositionFree==true){
+      flowers.push({x:mouseX, y:mouseY, color: flowerColor, nPetals: nPetals, size: size})
+      drawFlower(mouseX,mouseY,flowerColor)
+      flowerCount += 1
+    }
   }  
-  // console.log(flowers)
-  // console.log(flowerCount)
+  
+}
+
+function keyPressed(){
+  if(key == "n" || key == "N"){
+    console.log("noite");
+    isDay = false
+
+  }
+  if(key == "d" || key == "D"){
+    console.log("dia");
+    isDay = true
+  }
 }
 
 function drawFlower(x,y, flowerColor,nPetals,size) {
@@ -172,82 +193,86 @@ function drawFlower(x,y, flowerColor,nPetals,size) {
   
 }
 
-function addFish(){ 
-  for(let i=0; i<4;i++){
-    push()
-    translate(centerX,centerY)
-    if(i%2==0){
-      rotate(-angle*0.2*(i+1))
-    }else{
-      rotate(angle*0.2*(i+1))
-    }
-
-    if(i%2==0){
-      //criar sombras
+function waterDetails(){ 
+  if(flowerCount>= 20){
+    console.log(nFish);
+    for(let i=0; i<nFish;i++){
       push()
-      drawingContext.shadowOffsetX = 5;
-      drawingContext.shadowOffsetY = 2;
-      drawingContext.shadowBlur = 10
-      drawingContext.shadowColor = 'grey';
-      ellipse(radius[i],0, 10,16)
+      translate(lakeX,lakeY)
+      if(i%2==0){
+        rotate(-angle*fishSpeed*(i+1))
+      }else{
+        rotate(angle*fishSpeed*(i+1))
+      }
+  
+      if(i%2==0){
+        //criar sombras
+        push()
+        drawingContext.shadowOffsetX = 5;
+        drawingContext.shadowOffsetY = 2;
+        drawingContext.shadowBlur = 10
+        drawingContext.shadowColor = 'grey';
+        ellipse(radius[i],0, 10,16)
+        pop()
+        push()
+        drawingContext.shadowOffsetX = 5;
+        drawingContext.shadowOffsetY = 2;
+        drawingContext.shadowBlur = 10
+        drawingContext.shadowColor = 'grey';
+        triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
+        pop()
+  
+        //criar peixe
+        fill(fishColors[i])
+        ellipse(radius[i],0, 10,16)
+        triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
+      }else{
+        //criar sombras
+        push()
+        drawingContext.shadowOffsetX = 5;
+        drawingContext.shadowOffsetY = 2;
+        drawingContext.shadowBlur = 10
+        drawingContext.shadowColor = 'grey';
+        ellipse(radius[i],0, 10,16)
+        pop()
+        push()
+        drawingContext.shadowOffsetX = 5;
+        drawingContext.shadowOffsetY = 2;
+        drawingContext.shadowBlur = 10
+        drawingContext.shadowColor = 'grey';
+        triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
+        pop()
+  
+        //criar peixe
+        fill(fishColors[i])
+        ellipse(radius[i],0, 10,16)
+        triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
+      }
+      
+      if(radius[i]<80){
+        angle = angle + speed*1.5
+      }else{
+        angle = angle + speed
+      }
       pop()
-      push()
-      drawingContext.shadowOffsetX = 5;
-      drawingContext.shadowOffsetY = 2;
-      drawingContext.shadowBlur = 10
-      drawingContext.shadowColor = 'grey';
-      triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
-      pop()
-
-      //criar peixe
-      fill(fishColors[i])
-      ellipse(radius[i],0, 10,16)
-      triangle(radius[i],8,radius[i]-8,15,radius[i]+8,15)
-    }else{
-      //criar sombras
-      push()
-      drawingContext.shadowOffsetX = 5;
-      drawingContext.shadowOffsetY = 2;
-      drawingContext.shadowBlur = 10
-      drawingContext.shadowColor = 'grey';
-      ellipse(radius[i],0, 10,16)
-      pop()
-      push()
-      drawingContext.shadowOffsetX = 5;
-      drawingContext.shadowOffsetY = 2;
-      drawingContext.shadowBlur = 10
-      drawingContext.shadowColor = 'grey';
-      triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
-      pop()
-
-      //criar peixe
-      fill(fishColors[i])
-      ellipse(radius[i],0, 10,16)
-      triangle(radius[i],-8,radius[i]-8,-15,radius[i]+8,-15)
     }
     
-    if(radius[i]<80){
-      angle = angle + speed*1.5
-    }else{
-      angle = angle + speed
-    }
+    push()
+    translate(lakeX, lakeY);
+    rotate (angle);
+    
+    //ondas
+    strokeWeight(2)
+    stroke(255,255,255,150)
+    noFill()
+    arc(radiusWaves[0], radiusWaves[0]/4, 50, 50, 0, HALF_PI);
+    arc(radiusWaves[1], radiusWaves[1]/3, 150, 150, 0, HALF_PI);
+    arc(radiusWaves[0]/8, radiusWaves[0]/3, 180, 180, PI, PI + QUARTER_PI);
+    arc(radiusWaves[0]/8, radiusWaves[0]/3, 100, 100, HALF_PI, PI);
+    
+    angle = angle + speed;
     pop()
   }
-  
-  push()
-  translate(centerX, centerY);
-  rotate (angle);
-  
-  strokeWeight(2)
-  stroke(255,255,255,150)
-  noFill()
-  arc(radiusWaves[0], radiusWaves[0]/4, 50, 50, 0, HALF_PI);
-  arc(radiusWaves[1], radiusWaves[1]/3, 150, 150, 0, HALF_PI);
-  arc(radiusWaves[0]/8, radiusWaves[0]/3, 180, 180, PI, PI + QUARTER_PI);
-  arc(radiusWaves[0]/8, radiusWaves[0]/3, 100, 100, HALF_PI, PI);
-  
-  angle = angle + speed;
-  pop()
 
   if(flowerCount >= 30){
     for(let i=0; i<lilyX.length;i++){
@@ -260,7 +285,7 @@ function addFish(){
       pop()
       let c = drawingContext.createRadialGradient(lilyX[i],lilyY[i],17,lilyX[i],lilyY[i],50)
       c.addColorStop(0,"green")
-      c.addColorStop(1,"darkgreen")
+      c.addColorStop(1,"black")
       drawingContext.fillStyle = c
       noStroke()
   
@@ -284,25 +309,44 @@ function addFish(){
 }
 
 function flyingBird(){
-  rotate(QUARTER_PI);
-  //ativa o desenho do passaro e o som quando o resto do frameCount for 0
-  if(frameCount%600==0){
-    drawBird = true
-    sound.play()
-  }
-  // console.log(frameCount%600)
-
-  //ativa o desenho
-  if(drawBird == true){
-    image(bird, birdX, birdY)
-    if(birdX<window.innerWidth){
-      birdX+=2
-      birdY-=3
-    }else{
-      birdX = 0
-      birdY = window.innerHeight
-      //quando chega ao fim passa para false até o resto ser 0
-      drawBird=false
+  if(flowerCount >= 20){
+    push()
+    rotate(QUARTER_PI);
+    //ativa o desenho do passaro e o som quando o resto do frameCount for 0
+    if(frameCount%600==0){
+      drawBird = true
+      sound.play()
     }
+  
+    //ativa o desenho
+    if(drawBird == true){
+      image(bird, birdX, birdY)
+      if(birdX<window.innerWidth){
+        birdX+=2
+        birdY-=3
+      }else{
+        birdX = 0
+        birdY = window.innerHeight
+        //quando chega ao fim passa para false até o resto ser 0
+        drawBird=false
+      }
+    }
+    pop()
   }
+}
+
+function dayNight(){
+  if(isDay == false){
+    rotate(0)
+    fill(0,0,0,155)
+    rect(0,0,window.innerWidth,window.innerHeight)
+    tint(255,0)
+    fishSpeed = 0.1
+    speed=0.003
+  }else{
+    tint(255,255)
+    fishSpeed=0.3
+    speed=0.005
+  }
+
 }
