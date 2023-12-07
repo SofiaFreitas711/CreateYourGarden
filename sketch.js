@@ -348,6 +348,7 @@ function dayNight(){
     tint(255,255)
     fishSpeed=0.3
     speed=0.005
+    sound.setVolume(1)
   }
 
 }
