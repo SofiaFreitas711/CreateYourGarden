@@ -25,10 +25,12 @@ let isPositionFree = true
 let nFish = 0
 let isDay = true
 let fishSpeed = 0.3
+let crickets
 
 function preload(){
   sound =  loadSound("assets/sound.wav")
   bird = loadImage("assets/Bird.png")
+  crickets = loadSound("assets/crickets.wav")
 }
 
 function setup() {
@@ -344,11 +346,19 @@ function dayNight(){
     fishSpeed = 0.1
     speed=0.003
     sound.setVolume(0)
+    birdX=0
+    birdY=window.innerHeight + 292
+    if(frameCount%300==0){  
+      crickets.play()
+      crickets.setVolume(0.1)
+    }
+    
   }else{
     tint(255,255)
     fishSpeed=0.3
     speed=0.005
     sound.setVolume(1)
+    crickets.setVolume(0)
   }
 
 }
